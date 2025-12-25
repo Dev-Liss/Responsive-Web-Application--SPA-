@@ -1,35 +1,21 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import propertiesData from './data/properties.json';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div style={{ fontFamily: 'sans-serif', padding: '20px' }}>
+      <h1>Project Phase 1: Setup Complete</h1>
+      <h3>Properties Loaded: {propertiesData.properties.length} / 7</h3>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
+        {propertiesData.properties.map(property => (
+            <div key={property.id} style={{ border: '1px solid #ccc', padding: '10px' }}>
+              <img src={`/images/${property.id}/main.jpeg`} alt={property.type} style={{ width: '100%' }} />
+              <h4>{property.location}</h4>
+              <p>£{property.price.toLocaleString()}</p>
+            </div>
+        ))}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;
