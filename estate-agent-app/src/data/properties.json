@@ -8,7 +8,7 @@
       "tenure": "Freehold",
       "description": "Attractive three bedroom semi-detached family home situated within 0.5 miles of Petts Wood station with fast trains to London and within easy walking distance of local shops, schools, bus routes and National Trust woodland. The property comprises; two receptions, fitted 18'9 x 10'1 kitchen/breakfast room and conservatory. The property also benefits from having a utility room and cloakroom.",
       "location": "Petts Wood Road, Petts Wood, Orpington BR5",
-      "picture": "public/images/prop1/main.jpeg",
+      "picture": "images/prop1/main.jpeg",
       "url": "properties/prop1.html",
       "added": {
         "month": "October",
@@ -24,7 +24,7 @@
       "tenure": "Leasehold",
       "description": "Presented in excellent decorative order throughout is this two double bedroom, two bathroom, garden flat. The modern fitted kitchen is open plan to the living room which boasts solid wooden floors and includes integrated appliances including a dishwasher & a washing machine. This large open plan benefits from bi folding doors onto a secluded private courtyard garden.",
       "location": "Crofton Road, Orpington BR6",
-      "picture": "public/images/prop2/main.jpeg",
+      "picture": "images/prop2/main.jpeg",
       "url": "properties/prop2.html",
       "added": {
         "month": "September",
@@ -40,7 +40,7 @@
       "tenure": "Freehold",
       "description": "Stunning five bedroom detached modern home with spacious garden and garage. This property features a large open-plan living area, a state-of-the-art kitchen, and a master suite with a walk-in wardrobe and en-suite bathroom. Perfect for a growing family looking for luxury and comfort in a quiet neighborhood.",
       "location": "Chislehurst Road, Chislehurst BR7",
-      "picture": "public/images/prop3/main.jpeg",
+      "picture": "images/prop3/main.jpeg",
       "url": "properties/prop3.html",
       "added": {
         "month": "January",
@@ -56,7 +56,7 @@
       "tenure": "Leasehold",
       "description": "A cozy one-bedroom apartment perfect for first-time buyers, close to local amenities. Features include a bright living room, a compact but functional kitchen, and a modern bathroom. Situated just minutes from the train station, offering easy access to the city center.",
       "location": "High Street, Bromley BR1",
-      "picture": "public/images/prop4/main.jpeg",
+      "picture": "images/prop4/main.jpeg",
       "url": "properties/prop4.html",
       "added": {
         "month": "March",
@@ -72,7 +72,7 @@
       "tenure": "Freehold",
       "description": "Spacious four bedroom terrace house with original Victorian features. This character property boasts high ceilings, feature fireplaces, and a newly renovated kitchen diner. The garden is well-maintained and provides a perfect space for outdoor entertaining.",
       "location": "Station Road, Sidcup DA15",
-      "picture": "public/images/prop5/main.jpeg",
+      "picture": "images/prop5/main.jpeg",
       "url": "properties/prop5.html",
       "added": {
         "month": "November",
@@ -88,7 +88,7 @@
       "tenure": "Share of Freehold",
       "description": "Luxury three bedroom penthouse apartment with panoramic views of the city. Includes a private rooftop terrace, concierge service, and underground parking. The interior is finished to the highest standard with smart home technology throughout.",
       "location": "London Road, Sevenoaks TN13",
-      "picture": "/public/images/prop6/main.jpeg",
+      "picture": "images/prop6/main.jpeg",
       "url": "properties/prop6.html",
       "added": {
         "month": "April",
@@ -104,7 +104,7 @@
       "tenure": "Freehold",
       "description": "Charming two bedroom cottage situated in a quiet cul-de-sac. This delightful home features a cozy living room with a wood-burning stove, a country-style kitchen, and a beautiful rear garden backing onto open fields. Ideal for those seeking a peaceful retreat.",
       "location": "Main Road, Biggin Hill TN16",
-      "picture": "public/images/prop7/main.jpeg",
+      "picture": "images/prop7/main.jpeg",
       "url": "properties/prop7.html",
       "added": {
         "month": "December",
