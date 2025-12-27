@@ -143,10 +143,10 @@ const SearchPage = () => {
             </div>
 
             {/* GRID LAYOUT: Results (Left) + Favorites (Right) */}
-            <div style={{ display: 'grid', gridTemplateColumns: '3fr 1fr', gap: '20px' }}>
+            <div className="search-layout">
                 
                 {/* LEFT: Search Results */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
+                <div className="property-grid">
                     {filteredProperties.length === 0 ? <p>No properties found.</p> : 
                         filteredProperties.map(property => (
                             <PropertyCard key={property.id} property={property} />

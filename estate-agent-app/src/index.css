@@ -1,7 +1,87 @@
-/* Styles for Date Picker Input */
-.date-picker-input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+/* GLOBAL RESETS */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* NAVIGATION */
+nav {
+    background: #2c3e50;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+
+/* RESPONSIVE LAYOUTS */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Search Page Layout: Desktop (Side-by-side) -> Mobile (Stacked) */
+.search-layout {
+    display: grid;
+    grid-template-columns: 3fr 1fr; /* Desktop: Results Left, Favorites Right */
+    gap: 20px;
+}
+
+@media (max-width: 768px) {
+    .search-layout {
+        grid-template-columns: 1fr; /* Mobile: Stack them in one column */
+    }
+    
+    /* Order: Put Favorites ABOVE results on mobile so user sees them? 
+       Or below. Let's keep below for now, or use 'order' to swap. */
+}
+
+/* Property Grid within the Results Area */
+.property-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+/* BUTTON STYLES (Global) */
+button {
+    transition: transform 0.1s, background-color 0.2s;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+/* Add to src/index.css */
+
+.btn-view {
+    display: inline-block;
+    width: 100%; /* Makes it full width of the card */
+    margin-top: 15px;
+    padding: 10px 0;
+    background-color: #007bff; /* Blue */
+    color: white !important; /* Force text to be white */
+    text-decoration: none;
+    text-align: center;
+    border-radius: 5px;
+    font-weight: 600;
+    transition: background-color 0.2s;
+    border: none;
+}
+
+.btn-view:hover {
+    background-color: #0056b3; /* Darker blue on hover */
 }

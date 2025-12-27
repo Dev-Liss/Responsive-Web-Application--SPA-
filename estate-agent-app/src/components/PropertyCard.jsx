@@ -24,13 +24,13 @@ const PropertyCard = ({ property }) => {
                 cursor: 'move'
             }}
         >
-            <img src={`/${property.picture}`} alt={property.type} style={{ width: '100%', height: '200px', objectFit: 'cover' }} />
+            <img src={`${import.meta.env.BASE_URL}${property.picture}`} alt={property.type} style={{ width: '100%', height: '200px', objectFit: 'cover' }} />
             <div style={{ padding: '15px' }}>
                 <h3>{property.type} - £{property.price.toLocaleString()}</h3>
                 <p style={{ color: '#666' }}>{property.location}</p>
                 <p>{property.bedrooms} Bedrooms</p>
                 <p style={{ fontSize: '0.9em', color: '#888' }}>{property.description.substring(0, 80)}...</p>
-                <Link to={`/property/${property.id}`} style={{ display: 'block', marginTop: '10px', color: '#007bff', fontWeight: 'bold' }}>
+                <Link to={`/property/${property.id}`} className="btn-view">
                     View Details &rarr;
                 </Link>
             </div>

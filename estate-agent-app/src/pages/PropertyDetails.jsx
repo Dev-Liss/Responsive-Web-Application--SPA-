@@ -38,19 +38,19 @@ const PropertyDetails = () => {
                 
                 {/* LEFT: Image Gallery */}
                 <div>
-                    <img src={`/${mainImage}`} alt="Main" style={{ width: '100%', borderRadius: '8px', marginBottom: '10px' }} />
+                    <img src={`${import.meta.env.BASE_URL}${mainImage}`} alt="Main" style={{ width: '100%', borderRadius: '8px', marginBottom: '10px' }} />
                     <div style={{ display: 'flex', gap: '10px' }}>
                         {images.map((img, index) => (
-                            <img 
-                                key={index} 
-                                src={`/${img}`} 
-                                alt={`Thumbnail ${index}`} 
-                                onClick={() => setMainImage(img)} 
-                                style={{ 
-                                    width: '80px', height: '60px', objectFit: 'cover', cursor: 'pointer', borderRadius: '4px', 
-                                    border: mainImage === img ? '3px solid #007bff' : '1px solid #ddd' // Thicker border for better visibility
-                                }} 
-                            />
+                        <img 
+                            key={index} 
+                            src={`${import.meta.env.BASE_URL}${img}`} 
+                            alt={`Thumbnail ${index}`} 
+                            onClick={() => setMainImage(img)} 
+                            style={{ 
+                                width: '80px', height: '60px', objectFit: 'cover', cursor: 'pointer', borderRadius: '4px', 
+                                border: mainImage === img ? '3px solid #007bff' : '1px solid #ddd' 
+                            }} 
+                        />
                         ))}
                     </div>
                 </div>
