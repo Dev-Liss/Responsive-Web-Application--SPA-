@@ -1,40 +1,41 @@
 import React, { createContext, useState, useEffect } from 'react';
 import propertiesData from '../data/properties.json';
 
-// Create the Context (The "Container" for property data)
 export const PropertyContext = createContext();
 
-// Create the Provider (Component that provides data to children)
 export const PropertyProvider = ({ children }) => {
+    // Initialize properties and favorites
     const [properties, setProperties] = useState([]);
     const [favorites, setFavorites] = useState([]);
 
-    // Load JSON data when the app starts
+    // Load data from JSON when the app starts
     useEffect(() => {
-        setProperties(propertiesData.properties);
+        // Check if the JSON has the "properties" key
+        if (propertiesData && propertiesData.properties) {
+            setProperties(propertiesData.properties);
+        }
     }, []);
 
-    // Function to add a property to favorites
+    // Add to Favorites (prevent duplicates)
     const addToFavorites = (property) => {
-        // Check if already in favorites
         if (!favorites.find(fav => fav.id === property.id)) {
             setFavorites([...favorites, property]);
         }
     };
 
-    // Function to remove from favorites 
+    // Remove from Favorites
     const removeFromFavorites = (propertyId) => {
         setFavorites(favorites.filter(fav => fav.id !== propertyId));
     };
     
-    // Function to clear all favorites 
+    // Clear all Favorites
     const clearFavorites = () => {
         setFavorites([]);
     };
 
     return (
         <PropertyContext.Provider value={{ 
-            properties, 
+            properties,
             favorites, 
             addToFavorites, 
             removeFromFavorites,

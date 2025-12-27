@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css"; // Import styles for the widget
 import { parsePropertyDate } from '../utils';
+import PropertyCard from '../components/PropertyCard';
+import FavoritesList from '../components/FavoritesList';
 
 const SearchPage = () => {
     const { properties } = useContext(PropertyContext);
@@ -40,7 +42,7 @@ const SearchPage = () => {
             // Bedroom Check
             const bedMatch = property.bedrooms >= parseInt(minBed) && property.bedrooms <= parseInt(maxBed);
 
-            // Postcode Check (First part match, e.g., "BR1")
+            // Postcode Check (First part match)
             const postcodeMatch = postcode === "" || property.location.toLowerCase().includes(postcode.toLowerCase());
 
             // Date Check 
@@ -128,6 +130,7 @@ const SearchPage = () => {
                         </div>
                     </div>
 
+                    {/* Action Buttons */}
                     <div style={{ marginTop: '20px' }}>
                         <button type="submit" style={{ padding: '10px 20px', background: '#007bff', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer', marginRight: '10px' }}>
                             Search Properties
@@ -139,24 +142,22 @@ const SearchPage = () => {
                 </form>
             </div>
 
-            {/* RESULTS GRID */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
-                {filteredProperties.length === 0 ? <p>No properties found matching your criteria.</p> : 
-                    filteredProperties.map(property => (
-                        <div key={property.id} style={{ border: '1px solid #ddd', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>
-                            <img src={`/${property.picture}`} alt={property.type} style={{ width: '100%', height: '200px', objectFit: 'cover' }} />
-                            <div style={{ padding: '15px' }}>
-                                <h3>{property.type} - £{property.price.toLocaleString()}</h3>
-                                <p style={{ color: '#666' }}>{property.location}</p>
-                                <p>{property.bedrooms} Bedrooms</p>
-                                <p style={{ fontSize: '0.9em', color: '#888' }}>{property.description.substring(0, 100)}...</p>
-                                <Link to={`/property/${property.id}`} style={{ display: 'block', marginTop: '10px', color: '#007bff', textDecoration: 'none', fontWeight: 'bold' }}>
-                                    View Details &rarr;
-                                </Link>
-                            </div>
-                        </div>
-                    ))
-                }
+            {/* GRID LAYOUT: Results (Left) + Favorites (Right) */}
+            <div style={{ display: 'grid', gridTemplateColumns: '3fr 1fr', gap: '20px' }}>
+                
+                {/* LEFT: Search Results */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
+                    {filteredProperties.length === 0 ? <p>No properties found.</p> : 
+                        filteredProperties.map(property => (
+                            <PropertyCard key={property.id} property={property} />
+                        ))
+                    }
+                </div>
+
+                {/* RIGHT: Favorites Sidebar */}
+                <div>
+                    <FavoritesList />
+                </div>
             </div>
         </div>
     );
