@@ -1,3 +1,8 @@
+// Get base URL for assets
+export const getBaseUrl = () => {
+    return import.meta.env.BASE_URL;
+};
+
 // Helper to parse the custom date format from properties.json
 export const parsePropertyDate = (dateObj) => {
     const months = {
