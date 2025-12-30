@@ -43,7 +43,7 @@ const FavoritesList = () => {
                     {favorites.map(fav => (
                         <li key={fav.id} style={{ marginBottom: '10px', borderBottom: '1px solid #ccc', paddingBottom: '5px' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <span>{fav.type} - £{fav.price?.toLocaleString()}</span>
+                                <span>{fav.type} - Rs. {fav.price?.toLocaleString()}</span>
                                 <button onClick={() => removeFromFavorites(fav.id)} style={{ background: 'none', border: 'none', color: 'red', cursor: 'pointer' }}>
                                     <FaTrash />
                                 </button>

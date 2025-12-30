@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { PropertyContext } from '../context/PropertyContext';
 import DatePicker from 'react-datepicker';
-import "react-datepicker/dist/react-datepicker.css"; // Import styles for the widget
+import "react-datepicker/dist/react-datepicker.css";
 import { parsePropertyDate } from '../utils';
 import PropertyCard from '../components/PropertyCard';
 import FavoritesList from '../components/FavoritesList';
@@ -13,63 +13,44 @@ const SearchPage = () => {
     // Search Criteria State
     const [type, setType] = useState("Any");
     const [minPrice, setMinPrice] = useState(0);
-    // FIX: Increased Max Price to 500 Million to match SL Market
     const [maxPrice, setMaxPrice] = useState(500000000); 
     const [minBed, setMinBed] = useState(1);
     const [maxBed, setMaxBed] = useState(10);
     const [postcode, setPostcode] = useState("");
     
-    // Date Filter State (React Widget)
+    // Date Filter State
     const [dateFrom, setDateFrom] = useState(null);
     const [dateTo, setDateTo] = useState(null);
 
-    // Initial load: show all properties
     useEffect(() => {
         setFilteredProperties(properties);
     }, [properties]);
 
-    // MAIN FILTERING LOGIC 
     const handleSearch = (e) => {
         e.preventDefault();
-
         const results = properties.filter(property => {
-            // Type Check
             const typeMatch = type === "Any" || property.type === type;
-
-            // Price Check
             const priceMatch = property.price >= parseInt(minPrice) && property.price <= parseInt(maxPrice);
-
-            // Bedroom Check
             const bedMatch = property.bedrooms >= parseInt(minBed) && property.bedrooms <= parseInt(maxBed);
-
-            // Postcode/Location Check (Matches City name or Postcode number)
             const postcodeMatch = postcode === "" || property.location.toLowerCase().includes(postcode.toLowerCase());
-
-            // Date Check 
+            
             let dateMatch = true;
             const propDate = parsePropertyDate(property.added);
-            
             if (dateFrom && dateTo) {
-                // Between dates
                 dateMatch = propDate >= dateFrom && propDate <= dateTo;
             } else if (dateFrom) {
-                // After specified date
                 dateMatch = propDate >= dateFrom;
             }
-
-            // Combine all filters
             return typeMatch && priceMatch && bedMatch && postcodeMatch && dateMatch;
         });
-
         setFilteredProperties(results);
     };
 
-    // CLEAR FILTERS
     const handleClear = () => {
         setFilteredProperties(properties);
         setType("Any");
         setMinPrice(0);
-        setMaxPrice(500000000); // Reset to 500 Million
+        setMaxPrice(500000000);
         setPostcode("");
         setDateFrom(null);
         setDateTo(null);
@@ -77,99 +58,108 @@ const SearchPage = () => {
 
     return (
         <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
-            <h1>Find Your Dream Home in Sri Lanka</h1>
+            <h1 style={{ marginBottom: '20px', color: '#333' }}>Find Your Dream Home in Sri Lanka</h1>
             
-            {/* SEARCH FORM CONTAINER */}
-            <div style={{ background: '#f4f4f4', padding: '20px', borderRadius: '8px', marginBottom: '20px' }}>
+            {/* SEARCH FORM CONTAINER (Styled with CSS class) */}
+            <div className="search-card">
                 <form onSubmit={handleSearch}>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px' }}>
+                    <div className="search-grid">
                         
                         {/* Type */}
-                        <div>
-                            <label>Property Type:</label>
-                            <select style={{ width: '100%', padding: '8px' }} value={type} onChange={e => setType(e.target.value)}>
-                                <option value="Any">Any</option>
+                        <div className="form-group">
+                            <label>Property Type</label>
+                            <select className="form-control" value={type} onChange={e => setType(e.target.value)}>
+                                <option value="Any">Any Type</option>
                                 <option value="House">House</option>
-                                <option value="Flat">Flat</option>
+                                <option value="Flat">Flat / Apartment</option>
                             </select>
                         </div>
 
-                        {/* Price */}
-                        <div>
-                            {/* Formatted Number for readability */}
+                        {/* Price Range (Min) */}
+                        <div className="form-group">
                             <label>Min Price: Rs. {parseInt(minPrice).toLocaleString()}</label>
                             <input 
                                 type="range" 
                                 min="0" 
                                 max="500000000" 
-                                step="1000000" // Step by 1 Million
-                                style={{ width: '100%' }}
+                                step="1000000" 
                                 value={minPrice} 
                                 onChange={e => setMinPrice(e.target.value)} 
                             />
                         </div>
-                        <div>
+
+                        {/* Price Range (Max) */}
+                        <div className="form-group">
                             <label>Max Price: Rs. {parseInt(maxPrice).toLocaleString()}</label>
                             <input 
                                 type="range" 
                                 min="0" 
                                 max="500000000" 
-                                step="1000000" // Step by 1 Million
-                                style={{ width: '100%' }}
+                                step="1000000" 
                                 value={maxPrice} 
                                 onChange={e => setMaxPrice(e.target.value)} 
                             />
                         </div>
 
                         {/* Bedrooms */}
-                        <div>
+                        <div className="form-group">
                             <label>Bedrooms: {minBed} - {maxBed}</label>
                             <div style={{ display: 'flex', gap: '10px' }}>
-                                <input type="number" min="0" max="10" value={minBed} onChange={e => setMinBed(e.target.value)} style={{ width: '50px' }} />
-                                <span>to</span>
-                                <input type="number" min="0" max="10" value={maxBed} onChange={e => setMaxBed(e.target.value)} style={{ width: '50px' }} />
+                                <input className="form-control" type="number" min="0" max="10" value={minBed} onChange={e => setMinBed(e.target.value)} />
+                                <span style={{ alignSelf: 'center' }}>to</span>
+                                <input className="form-control" type="number" min="0" max="10" value={maxBed} onChange={e => setMaxBed(e.target.value)} />
                             </div>
                         </div>
 
                         {/* Postcode */}
-                        <div>
-                            <label>Location (City or Code):</label>
-                            <input type="text" placeholder="e.g. Colombo or 00700" value={postcode} onChange={e => setPostcode(e.target.value)} 
-                                style={{ width: '100%', padding: '8px' }} />
+                        <div className="form-group">
+                            <label>Location</label>
+                            <input className="form-control" type="text" placeholder="e.g. Colombo 07" value={postcode} onChange={e => setPostcode(e.target.value)} />
                         </div>
 
                         {/* Date Widget */}
-                        <div>
-                            <label>Added After:</label>
-                            <DatePicker selected={dateFrom} onChange={date => setDateFrom(date)} placeholderText="Select Date" className="date-picker-input" />
+                        <div className="form-group">
+                            <label>Added After</label>
+                            {/* Wrapper div to fix DatePicker width issues */}
+                            <div style={{ width: '100%' }}>
+                                <DatePicker 
+                                    selected={dateFrom} 
+                                    onChange={date => setDateFrom(date)} 
+                                    placeholderText="Select Date" 
+                                    className="date-picker-input" 
+                                    wrapperClassName="date-picker-wrapper"
+                                />
+                            </div>
                         </div>
                     </div>
 
                     {/* Action Buttons */}
-                    <div style={{ marginTop: '20px' }}>
-                        <button type="submit" style={{ padding: '10px 20px', background: '#007bff', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer', marginRight: '10px' }}>
+                    <div className="action-buttons">
+                        <button type="submit" className="btn-search">
                             Search Properties
                         </button>
-                        <button type="button" onClick={handleClear} style={{ padding: '10px 20px', background: '#6c757d', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+                        <button type="button" onClick={handleClear} className="btn-clear">
                             Clear Filter
                         </button>
                     </div>
                 </form>
             </div>
 
-            {/* GRID LAYOUT: Results (Left) + Favorites (Right) */}
+            {/* GRID LAYOUT */}
             <div className="search-layout">
-                
-                {/* LEFT: Search Results */}
                 <div className="property-grid">
-                    {filteredProperties.length === 0 ? <p>No properties found matching your criteria.</p> : 
+                    {filteredProperties.length === 0 ? 
+                        <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '40px', color: '#777' }}>
+                            <h3>No properties found matching your criteria.</h3>
+                            <p>Try adjusting your price range or location.</p>
+                        </div> 
+                    : 
                         filteredProperties.map(property => (
                             <PropertyCard key={property.id} property={property} />
                         ))
                     }
                 </div>
 
-                {/* RIGHT: Favorites Sidebar */}
                 <div>
                     <FavoritesList />
                 </div>
