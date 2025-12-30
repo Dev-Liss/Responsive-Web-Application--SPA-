@@ -1,5 +1,5 @@
-import '@testing-library/jest-dom';
-import { TextEncoder, TextDecoder } from 'util';
+import "@testing-library/jest-dom";
+import { TextEncoder, TextDecoder } from "util";
 
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
@@ -8,7 +8,7 @@ global.TextDecoder = TextDecoder;
 global.import = {
   meta: {
     env: {
-      BASE_URL: '/'
-    }
-  }
+      BASE_URL: "/",
+    },
+  },
 };
