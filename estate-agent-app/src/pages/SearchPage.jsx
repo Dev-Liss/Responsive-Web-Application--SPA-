@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { PropertyContext } from '../context/PropertyContext';
-import { Link } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css"; // Import styles for the widget
 import { parsePropertyDate } from '../utils';
@@ -14,7 +13,8 @@ const SearchPage = () => {
     // Search Criteria State
     const [type, setType] = useState("Any");
     const [minPrice, setMinPrice] = useState(0);
-    const [maxPrice, setMaxPrice] = useState(2000000);
+    // FIX: Increased Max Price to 500 Million to match SL Market
+    const [maxPrice, setMaxPrice] = useState(500000000); 
     const [minBed, setMinBed] = useState(1);
     const [maxBed, setMaxBed] = useState(10);
     const [postcode, setPostcode] = useState("");
@@ -42,7 +42,7 @@ const SearchPage = () => {
             // Bedroom Check
             const bedMatch = property.bedrooms >= parseInt(minBed) && property.bedrooms <= parseInt(maxBed);
 
-            // Postcode Check (First part match)
+            // Postcode/Location Check (Matches City name or Postcode number)
             const postcodeMatch = postcode === "" || property.location.toLowerCase().includes(postcode.toLowerCase());
 
             // Date Check 
@@ -69,7 +69,7 @@ const SearchPage = () => {
         setFilteredProperties(properties);
         setType("Any");
         setMinPrice(0);
-        setMaxPrice(2000000);
+        setMaxPrice(500000000); // Reset to 500 Million
         setPostcode("");
         setDateFrom(null);
         setDateTo(null);
@@ -77,7 +77,7 @@ const SearchPage = () => {
 
     return (
         <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
-            <h1>Find Your Dream Home</h1>
+            <h1>Find Your Dream Home in Sri Lanka</h1>
             
             {/* SEARCH FORM CONTAINER */}
             <div style={{ background: '#f4f4f4', padding: '20px', borderRadius: '8px', marginBottom: '20px' }}>
@@ -96,14 +96,29 @@ const SearchPage = () => {
 
                         {/* Price */}
                         <div>
-                            <label>Min Price: £{minPrice}</label>
-                            <input type="range" min="0" max="2000000" step="50000" style={{ width: '100%' }}
-                                value={minPrice} onChange={e => setMinPrice(e.target.value)} />
+                            {/* Formatted Number for readability */}
+                            <label>Min Price: Rs. {parseInt(minPrice).toLocaleString()}</label>
+                            <input 
+                                type="range" 
+                                min="0" 
+                                max="500000000" 
+                                step="1000000" // Step by 1 Million
+                                style={{ width: '100%' }}
+                                value={minPrice} 
+                                onChange={e => setMinPrice(e.target.value)} 
+                            />
                         </div>
                         <div>
-                            <label>Max Price: £{maxPrice}</label>
-                            <input type="range" min="0" max="2000000" step="50000" style={{ width: '100%' }}
-                                value={maxPrice} onChange={e => setMaxPrice(e.target.value)} />
+                            <label>Max Price: Rs. {parseInt(maxPrice).toLocaleString()}</label>
+                            <input 
+                                type="range" 
+                                min="0" 
+                                max="500000000" 
+                                step="1000000" // Step by 1 Million
+                                style={{ width: '100%' }}
+                                value={maxPrice} 
+                                onChange={e => setMaxPrice(e.target.value)} 
+                            />
                         </div>
 
                         {/* Bedrooms */}
@@ -118,8 +133,8 @@ const SearchPage = () => {
 
                         {/* Postcode */}
                         <div>
-                            <label>Postcode Area (e.g. BR1):</label>
-                            <input type="text" placeholder="Postcode..." value={postcode} onChange={e => setPostcode(e.target.value)} 
+                            <label>Location (City or Code):</label>
+                            <input type="text" placeholder="e.g. Colombo or 00700" value={postcode} onChange={e => setPostcode(e.target.value)} 
                                 style={{ width: '100%', padding: '8px' }} />
                         </div>
 
@@ -147,7 +162,7 @@ const SearchPage = () => {
                 
                 {/* LEFT: Search Results */}
                 <div className="property-grid">
-                    {filteredProperties.length === 0 ? <p>No properties found.</p> : 
+                    {filteredProperties.length === 0 ? <p>No properties found matching your criteria.</p> : 
                         filteredProperties.map(property => (
                             <PropertyCard key={property.id} property={property} />
                         ))

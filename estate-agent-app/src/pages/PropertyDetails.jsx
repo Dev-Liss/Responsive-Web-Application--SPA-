@@ -34,7 +34,7 @@ const PropertyDetails = () => {
                 <FaArrowLeft style={{ marginRight: '5px' }} /> Back to Search
             </Link>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px', marginBottom: '40px' }}>
+            <div className="details-grid">
                 
                 {/* LEFT: Image Gallery */}
                 <div>
@@ -58,7 +58,7 @@ const PropertyDetails = () => {
                 {/* RIGHT: Key Details & Actions */}
                 <div>
                     <h1 style={{ marginTop: 0 }}>{property.type} in {property.location.split(',')[0]}</h1>
-                    <h2 style={{ color: '#28a745' }}>£{property.price.toLocaleString()}</h2>
+                    <h2 style={{ color: '#28a745' }}>Rs.{property.price.toLocaleString()}</h2>
                     
                     <p style={{ fontSize: '1.1em', color: '#555' }}>
                         <FaMapMarkerAlt /> {property.location}

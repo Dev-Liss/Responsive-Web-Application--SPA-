@@ -26,8 +26,8 @@ jest.mock('react-dnd-html5-backend', () => ({
 const mockProperty = {
     id: "prop1",
     type: "House",
-    price: 350000,
-    location: "London",
+    price: 185000000,
+    location: "Colombo",
     bedrooms: 3,
     picture: "images/prop1/main.jpg",
     description: "A lovely family home."
@@ -47,14 +47,14 @@ describe('PropertyCard Component Tests', () => {
         expect(screen.getByText(/House/i)).toBeInTheDocument();
     });
 
-    test('2. Displays the formatted price with £ symbol', () => {
+    test('2. Displays the formatted price with Rs. symbol', () => {
         renderComponent();
-        expect(screen.getByText(/350,000/i)).toBeInTheDocument();
+        expect(screen.getByText(/185,000,000/i)).toBeInTheDocument();
     });
 
     test('3. Displays the correct location', () => {
         renderComponent();
-        expect(screen.getByText(/London/i)).toBeInTheDocument();
+        expect(screen.getByText(/Colombo/i)).toBeInTheDocument();
     });
 
     test('4. Contains a View Details button', () => {

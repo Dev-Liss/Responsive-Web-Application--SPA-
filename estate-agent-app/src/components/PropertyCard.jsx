@@ -27,7 +27,7 @@ const PropertyCard = ({ property }) => {
         >
             <img src={`${getBaseUrl()}${property.picture}`} alt={property.type} style={{ width: '100%', height: '200px', objectFit: 'cover' }} />
             <div style={{ padding: '15px' }}>
-                <h3>{property.type} - £{property.price.toLocaleString()}</h3>
+                <h3>{property.type} - Rs.{property.price.toLocaleString()}</h3>
                 <p style={{ color: '#666' }}>{property.location}</p>
                 <p>{property.bedrooms} Bedrooms</p>
                 <p style={{ fontSize: '0.9em', color: '#888' }}>{property.description.substring(0, 80)}...</p>
