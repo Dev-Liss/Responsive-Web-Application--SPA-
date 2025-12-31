@@ -10,22 +10,34 @@ import {
   FaMapMarkerAlt,
   FaTag,
   FaCheck,
-} from "react-icons/fa"; // Added FaCheck
+} from "react-icons/fa";
 
+/**
+ * PropertyDetails Page
+ * Displays full information about a specific property.
+ * Uses URL parameters (id) to find the right house.
+ */
 const PropertyDetails = () => {
+  // 1. Get the 'id' from the URL (e.g. /property/prop1)
   const { id } = useParams();
-  // 1. Get 'favorites' from context to check if this item is already saved
+
+  // 2. Get global data to find the specific property
   const { properties, addToFavorites, favorites } = useContext(PropertyContext);
 
   const property = properties.find((p) => p.id === id);
 
-  // Dynamic Image List
+  // 3. Create a list of images (Main picture + thumbnails)
   const images = property
-    ? [property.picture, `images/${id}/1.jpeg`, `images/${id}/2.jpeg`]
+    ? [
+        property.picture, // The main image from JSON
+        ...Array.from({ length: 6 }, (_, i) => `images/${id}/${i + 1}.jpeg`)
+      ]
     : [];
 
+  // State for the currently selected large image
   const [mainImage, setMainImage] = useState(property ? property.picture : "");
 
+  // Safety Check: If someone types a wrong ID in URL
   if (!property) {
     return (
       <div style={{ padding: "20px" }}>
@@ -35,11 +47,12 @@ const PropertyDetails = () => {
     );
   }
 
-  // Checking if this property is currently in the favorites list
+  // Check if this property is already in favorites
   const isSaved = favorites.some((fav) => fav.id === property.id);
 
   return (
     <div style={{ maxWidth: "1000px", margin: "0 auto", padding: "20px" }}>
+      {/* Back Button */}
       <Link
         to="/"
         style={{
@@ -54,13 +67,14 @@ const PropertyDetails = () => {
       </Link>
 
       <div className="details-grid">
-        {/* LEFT: Image Gallery */}
+        {/* LEFT COLUMN: Image Gallery */}
         <div>
           <img
             src={`${import.meta.env.BASE_URL}${mainImage}`}
             alt="Main"
             style={{ width: "100%", borderRadius: "8px", marginBottom: "10px" }}
           />
+          {/* Thumbnail Strip */}
           <div style={{ display: "flex", gap: "10px" }}>
             {images.map((img, index) => (
               <img
@@ -68,6 +82,7 @@ const PropertyDetails = () => {
                 src={`${import.meta.env.BASE_URL}${img}`}
                 alt={`Thumbnail ${index}`}
                 onClick={() => setMainImage(img)}
+                onError={(e) => e.target.style.display = 'none'}
                 style={{
                   width: "80px",
                   height: "60px",
@@ -82,7 +97,7 @@ const PropertyDetails = () => {
           </div>
         </div>
 
-        {/* RIGHT: Key Details & Actions */}
+        {/* RIGHT COLUMN: Key Details & Actions */}
         <div>
           <h1 style={{ marginTop: 0 }}>
             {property.type} in {property.location.split(",")[0]}
@@ -103,14 +118,13 @@ const PropertyDetails = () => {
             </span>
           </div>
 
-          {/* 3. CONDITIONAL BUTTON RENDER */}
+          {/* SAVE BUTTON (Changes color if already saved) */}
           <button
-            onClick={() => !isSaved && addToFavorites(property)} // Prevent adding twice if clicked again
-            disabled={isSaved} // Optional: Disable click if already saved
+            onClick={() => !isSaved && addToFavorites(property)}
+            disabled={isSaved}
             style={{
               padding: "12px 24px",
               fontSize: "1em",
-              // Change color based on state: Green (Saved) vs Pink (Default)
               background: isSaved ? "#28a745" : "#e83e8c",
               color: "white",
               border: "none",
@@ -119,10 +133,9 @@ const PropertyDetails = () => {
               display: "flex",
               alignItems: "center",
               gap: "8px",
-              transition: "background 0.3s", // Color transition
+              transition: "background 0.3s",
             }}
           >
-            {/* Change Icon and Text based on state */}
             {isSaved ? (
               <>
                 <FaCheck /> Added to Favorites
@@ -136,7 +149,7 @@ const PropertyDetails = () => {
         </div>
       </div>
 
-      {/* BOTTOM SECTION: React Tabs */}
+      {/* BOTTOM SECTION: Tabs (Description, Floor Plan, Map) */}
       <Tabs>
         <TabList>
           <Tab>Description</Tab>
@@ -152,32 +165,38 @@ const PropertyDetails = () => {
         </TabPanel>
 
         <TabPanel>
-          <h3>Floor Plan</h3>
-          <div
-            style={{
-              background: "#eee",
-              height: "300px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <p style={{ color: "#888" }}>Floor Plan Image would go here</p>
+          <div style={{ marginTop: "20px", textAlign: "center" }}>
+            {/* Generic Floor Plan Image */}
+            <img
+              src={`${import.meta.env.BASE_URL}images/floorplan.jpg`}
+              alt="Floor Plan"
+              style={{
+                maxWidth: "100%",
+                height: "auto",
+                borderRadius: "8px",
+                border: "1px solid #ddd",
+              }}
+              onError={(e) => (e.target.style.display = "none")} // Hide if missing
+            />
+            <p style={{ color: "#888", fontStyle: "italic" }}>
+              Illustrative floor plan
+            </p>
           </div>
         </TabPanel>
 
         <TabPanel>
-          <h3>Location Map</h3>
-          <div
-            style={{
-              background: "#eee",
-              height: "300px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <p style={{ color: "#888" }}>Google Map Embed would go here</p>
+          <div style={{ marginTop: "20px" }}>
+            {/* Dynamic Google Map Embed based on Location */}
+            <iframe
+              width="100%"
+              height="350"
+              style={{ border: 0, borderRadius: "8px" }}
+              loading="lazy"
+              allowFullScreen
+              src={`https://maps.google.com/maps?q=${encodeURIComponent(
+                property.location
+              )}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
+            ></iframe>
           </div>
         </TabPanel>
       </Tabs>

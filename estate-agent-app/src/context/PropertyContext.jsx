@@ -1,38 +1,65 @@
-import React, { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect } from "react";
 import propertiesData from "../data/properties.json";
 
+/**
+ * PropertyContext
+ * This creates a "Global State" storage space.
+ * Any component in our app can access the data stored here.
+ */
 export const PropertyContext = createContext();
 
+/**
+ * PropertyProvider
+ * This component wraps our entire application (in App.jsx).
+ * It provides the 'properties' and 'favorites' data to all children.
+ */
 export const PropertyProvider = ({ children }) => {
-  // Initialize properties and favorites
+  // STATE: Stores the list of all properties loaded from JSON
   const [properties, setProperties] = useState([]);
+
+  // STATE: Stores the list of properties the user has "Favorited"
   const [favorites, setFavorites] = useState([]);
 
-  // Load data from JSON when the app starts
+  // EFFECT: Runs once when the app loads.
+  // It fetches the data from our local JSON file and saves it to state.
   useEffect(() => {
-    // Check if the JSON has the "properties" key
     if (propertiesData && propertiesData.properties) {
       setProperties(propertiesData.properties);
     }
   }, []);
 
-  // Add to Favorites (prevent duplicates)
+  /**
+   * Adds a property to the favorites list.
+   * Includes a check to prevent adding duplicates.
+   * @param {Object} property - The property object to add
+   */
   const addToFavorites = (property) => {
-    if (!favorites.find((fav) => fav.id === property.id)) {
+    // Check if property is ALREADY in the list
+    const isAlreadyFavorite = favorites.find((fav) => fav.id === property.id);
+
+    if (!isAlreadyFavorite) {
+      // If not, create a new array with the old favorites + the new one
       setFavorites([...favorites, property]);
     }
   };
 
-  // Remove from Favorites
+  /**
+   * Removes a property from the favorites list by ID.
+   * @param {string} propertyId - The ID of the property to remove
+   */
   const removeFromFavorites = (propertyId) => {
+    // .filter returns a new list containing only items that do NOT match the ID
     setFavorites(favorites.filter((fav) => fav.id !== propertyId));
   };
 
-  // Clear all Favorites
+  /**
+   * Clears all favorites.
+   */
   const clearFavorites = () => {
     setFavorites([]);
   };
 
+  // We return the Provider with all the data and functions attached
   return (
     <PropertyContext.Provider
       value={{

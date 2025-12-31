@@ -6,52 +6,85 @@ import { parsePropertyDate } from "../utils";
 import PropertyCard from "../components/PropertyCard";
 import FavoritesList from "../components/FavoritesList";
 
+/**
+ * SearchPage
+ * The main homepage where users can filter and view properties.
+ */
 const SearchPage = () => {
+  // Access global property data from our Context
   const { properties } = useContext(PropertyContext);
+
+  // State to hold the results shown to the user
   const [filteredProperties, setFilteredProperties] = useState([]);
 
-  // Search Criteria State
+  // --- SEARCH FILTER STATES ---
   const [type, setType] = useState("Any");
   const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(500000000);
+  const [maxPrice, setMaxPrice] = useState(500000000); // Default max: 500 Million LKR
   const [minBed, setMinBed] = useState(1);
   const [maxBed, setMaxBed] = useState(10);
   const [postcode, setPostcode] = useState("");
 
-  // Date Filter State
+  // Date Picker States
   const [dateFrom, setDateFrom] = useState(null);
   const [dateTo, setDateTo] = useState(null);
 
+  // Load all properties initially when the page starts
   useEffect(() => {
     setFilteredProperties(properties);
   }, [properties]);
 
+  /**
+   * handleSearch
+   * Runs when the user clicks "Search Properties".
+   * Filters the 'properties' array based on all selected criteria.
+   */
   const handleSearch = (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent page reload
+
     const results = properties.filter((property) => {
+      // 1. Filter by Type (if "Any", match everything)
       const typeMatch = type === "Any" || property.type === type;
+
+      // 2. Filter by Price (Check if within range)
       const priceMatch =
         property.price >= parseInt(minPrice) &&
         property.price <= parseInt(maxPrice);
+
+      // 3. Filter by Bedrooms
       const bedMatch =
         property.bedrooms >= parseInt(minBed) &&
         property.bedrooms <= parseInt(maxBed);
+
+      // 4. Filter by Location/Postcode (Case insensitive search)
       const postcodeMatch =
         postcode === "" ||
         property.location.toLowerCase().includes(postcode.toLowerCase());
 
+      // 5. Filter by Date (using helper function parsePropertyDate)
       let dateMatch = true;
       const propDate = parsePropertyDate(property.added);
+
       if (dateFrom && dateTo) {
+        // Match between two dates
         dateMatch = propDate >= dateFrom && propDate <= dateTo;
       } else if (dateFrom) {
+        // Match after start date
         dateMatch = propDate >= dateFrom;
       }
+
+      // Return TRUE only if ALL conditions match
       return typeMatch && priceMatch && bedMatch && postcodeMatch && dateMatch;
     });
+
+    // Update the UI with the results
     setFilteredProperties(results);
   };
 
+  /**
+   * handleClear
+   * Resets all filters to their default values
+   */
   const handleClear = () => {
     setFilteredProperties(properties);
     setType("Any");
@@ -68,11 +101,11 @@ const SearchPage = () => {
         Find Your Dream Home in Sri Lanka
       </h1>
 
-      {/* SEARCH FORM CONTAINER (Styled with CSS class) */}
+      {/* --- SEARCH FORM (White Card) --- */}
       <div className="search-card">
         <form onSubmit={handleSearch}>
           <div className="search-grid">
-            {/* Type */}
+            {/* Type Selector */}
             <div className="form-group">
               <label>Property Type</label>
               <select
@@ -86,7 +119,7 @@ const SearchPage = () => {
               </select>
             </div>
 
-            {/* Price Range (Min) */}
+            {/* Min Price Slider */}
             <div className="form-group">
               <label>
                 Min Price: Rs. {parseInt(minPrice).toLocaleString()}
@@ -101,7 +134,7 @@ const SearchPage = () => {
               />
             </div>
 
-            {/* Price Range (Max) */}
+            {/* Max Price Slider */}
             <div className="form-group">
               <label>
                 Max Price: Rs. {parseInt(maxPrice).toLocaleString()}
@@ -116,7 +149,7 @@ const SearchPage = () => {
               />
             </div>
 
-            {/* Bedrooms */}
+            {/* Bedroom Number Inputs */}
             <div className="form-group">
               <label>
                 Bedrooms: {minBed} - {maxBed}
@@ -142,7 +175,7 @@ const SearchPage = () => {
               </div>
             </div>
 
-            {/* Postcode */}
+            {/* Location Input */}
             <div className="form-group">
               <label>Location</label>
               <input
@@ -154,10 +187,9 @@ const SearchPage = () => {
               />
             </div>
 
-            {/* Date Widget */}
+            {/* Date Picker */}
             <div className="form-group">
               <label>Added After</label>
-              {/* Wrapper div to fix DatePicker width issues */}
               <div style={{ width: "100%" }}>
                 <DatePicker
                   selected={dateFrom}
@@ -182,8 +214,9 @@ const SearchPage = () => {
         </form>
       </div>
 
-      {/* GRID LAYOUT */}
+      {/* --- RESULTS AREA --- */}
       <div className="search-layout">
+        {/* Left Column: Properties */}
         <div className="property-grid">
           {filteredProperties.length === 0 ? (
             <div
@@ -204,6 +237,7 @@ const SearchPage = () => {
           )}
         </div>
 
+        {/* Right Column: Drag & Drop Favorites */}
         <div>
           <FavoritesList />
         </div>

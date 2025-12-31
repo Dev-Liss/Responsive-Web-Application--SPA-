@@ -3,7 +3,10 @@ import { useDrop } from "react-dnd";
 import { PropertyContext } from "../context/PropertyContext";
 import { FaTrash } from "react-icons/fa";
 
-// FavoritesList Component
+/**
+ * FavoritesList
+ * A Drop Target sidebar where users can drag properties to save them.
+ */
 const FavoritesList = () => {
   const {
     favorites,
@@ -13,18 +16,22 @@ const FavoritesList = () => {
     properties,
   } = useContext(PropertyContext);
 
-  // Hook to make this component a drop target
+  /**
+   * useDrop Hook (React DnD)
+   * This makes this component able to accept dropped items.
+   */
   const [{ isOver }, drop] = useDrop(
     () => ({
-      accept: "PROPERTY",
+      accept: "PROPERTY", // Must match the 'type' in PropertyCard
       drop: (item) => {
+        // Find the full property object using the ID
         const property = properties.find((p) => p.id === item.id);
         if (property) {
           addToFavorites(property);
         }
       },
       collect: (monitor) => ({
-        isOver: !!monitor.isOver(),
+        isOver: !!monitor.isOver(), // True if user is hovering a card over this box
       }),
     }),
     [properties, favorites]
@@ -32,25 +39,26 @@ const FavoritesList = () => {
 
   return (
     <div
-      // Drop target container
-      ref={drop}
+      ref={drop} // Connects the drop logic to this DIV
       style={{
         border: "2px dashed #007bff",
         borderRadius: "8px",
         padding: "15px",
+        // Change background color when user hovers a card over it
         background: isOver ? "#e9ecef" : "#f8f9fa",
         minHeight: "300px",
       }}
     >
       <h3>Favorites ({favorites.length})</h3>
-      <p style={{ fontSize: "0.9em", color: "#666" }}>Drag properties here</p>
+      <p style={{ fontSize: "0.9em", color: "#666" }}>
+        Drag properties here to save
+      </p>
 
-      {/* Favorites List */}
+      {/* List of Favorites */}
       {favorites.length === 0 ? (
         <p>No favorites yet.</p>
       ) : (
         <ul style={{ listStyle: "none", padding: 0 }}>
-          {/* Render each favorite property */}
           {favorites.map((fav) => (
             <li
               key={fav.id}
@@ -67,9 +75,11 @@ const FavoritesList = () => {
                   alignItems: "center",
                 }}
               >
-                <span>
-                  {fav.type} - Rs. {fav.price?.toLocaleString()}
-                </span>
+                <div style={{ fontSize: "0.9em" }}>
+                  <strong>{fav.type}</strong>
+                  <br />
+                  Rs. {fav.price?.toLocaleString()}
+                </div>
                 <button
                   onClick={() => removeFromFavorites(fav.id)}
                   style={{
@@ -78,6 +88,7 @@ const FavoritesList = () => {
                     color: "red",
                     cursor: "pointer",
                   }}
+                  title="Remove"
                 >
                   <FaTrash />
                 </button>
@@ -87,14 +98,14 @@ const FavoritesList = () => {
         </ul>
       )}
 
-      {/* Clear All Favorites Button */}
+      {/* Clear All Button */}
       {favorites.length > 0 && (
         <button
           onClick={clearFavorites}
           style={{
             marginTop: "10px",
-            padding: "5px 10px",
-            background: "red",
+            padding: "8px 10px",
+            background: "#dc3545",
             color: "white",
             border: "none",
             borderRadius: "4px",
