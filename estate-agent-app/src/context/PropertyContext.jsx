@@ -1,23 +1,14 @@
 import { createContext, useState, useEffect } from "react";
 import propertiesData from "../data/properties.json";
 
-/**
- * PropertyContext
- * This creates a "Global State" storage space.
- * Any component in our app can access the data stored here.
- */
+// Creates a "Global State" storage space.
 export const PropertyContext = createContext();
 
-/**
- * PropertyProvider
- * This component wraps our entire application (in App.jsx).
- * It provides the 'properties' and 'favorites' data to all children.
- */
 export const PropertyProvider = ({ children }) => {
-  // STATE: Stores the list of all properties loaded from JSON
+  // Properties list State
   const [properties, setProperties] = useState([]);
 
-  // STATE: Stores the list of properties the user has "Favorited"
+  // Favorites list State
   const [favorites, setFavorites] = useState([]);
 
   // EFFECT: Runs once when the app loads.
@@ -29,16 +20,12 @@ export const PropertyProvider = ({ children }) => {
   }, []);
 
   /**
-   * Adds a property to the favorites list.
-   * Includes a check to prevent adding duplicates.
+   * Adds a property to the favorites list, avoiding duplicates.
    * @param {Object} property - The property object to add
    */
   const addToFavorites = (property) => {
-    // Check if property is ALREADY in the list
     const isAlreadyFavorite = favorites.find((fav) => fav.id === property.id);
-
     if (!isAlreadyFavorite) {
-      // If not, create a new array with the old favorites + the new one
       setFavorites([...favorites, property]);
     }
   };
@@ -52,14 +39,11 @@ export const PropertyProvider = ({ children }) => {
     setFavorites(favorites.filter((fav) => fav.id !== propertyId));
   };
 
-  /**
-   * Clears all favorites.
-   */
   const clearFavorites = () => {
     setFavorites([]);
   };
 
-  // We return the Provider with all the data and functions attached
+  // Return the Provider with all the data and functions attached
   return (
     <PropertyContext.Provider
       value={{

@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect } from "react";
 import { PropertyContext } from "../context/PropertyContext";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -6,21 +6,16 @@ import { parsePropertyDate } from "../utils";
 import PropertyCard from "../components/PropertyCard";
 import FavoritesList from "../components/FavoritesList";
 
-/**
- * SearchPage
- * The main homepage where users can filter and view properties.
- */
-const SearchPage = () => {
-  // Access global property data from our Context
-  const { properties } = useContext(PropertyContext);
 
-  // State to hold the results shown to the user
+const SearchPage = () => {
+  const { properties } = useContext(PropertyContext);
+  // Hold results shown to the user
   const [filteredProperties, setFilteredProperties] = useState([]);
 
   // --- SEARCH FILTER STATES ---
   const [type, setType] = useState("Any");
   const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(500000000); // Default max: 500 Million LKR
+  const [maxPrice, setMaxPrice] = useState(500000000); 
   const [minBed, setMinBed] = useState(1);
   const [maxBed, setMaxBed] = useState(10);
   const [postcode, setPostcode] = useState("");
@@ -34,16 +29,12 @@ const SearchPage = () => {
     setFilteredProperties(properties);
   }, [properties]);
 
-  /**
-   * handleSearch
-   * Runs when the user clicks "Search Properties".
-   * Filters the 'properties' array based on all selected criteria.
-   */
+  // Filters the 'properties' array based on all selected criteria.
   const handleSearch = (e) => {
     e.preventDefault(); // Prevent page reload
 
     const results = properties.filter((property) => {
-      // 1. Filter by Type (if "Any", match everything)
+      // 1. Filter by Type
       const typeMatch = type === "Any" || property.type === type;
 
       // 2. Filter by Price (Check if within range)
@@ -56,20 +47,17 @@ const SearchPage = () => {
         property.bedrooms >= parseInt(minBed) &&
         property.bedrooms <= parseInt(maxBed);
 
-      // 4. Filter by Location/Postcode (Case insensitive search)
+      // 4. Filter by Location/Postcode
       const postcodeMatch =
         postcode === "" ||
         property.location.toLowerCase().includes(postcode.toLowerCase());
 
-      // 5. Filter by Date (using helper function parsePropertyDate)
+      // 5. Filter by Date Added
       let dateMatch = true;
       const propDate = parsePropertyDate(property.added);
-
       if (dateFrom && dateTo) {
-        // Match between two dates
         dateMatch = propDate >= dateFrom && propDate <= dateTo;
       } else if (dateFrom) {
-        // Match after start date
         dateMatch = propDate >= dateFrom;
       }
 
@@ -81,15 +69,14 @@ const SearchPage = () => {
     setFilteredProperties(results);
   };
 
-  /**
-   * handleClear
-   * Resets all filters to their default values
-   */
+  // Resets all filters
   const handleClear = () => {
     setFilteredProperties(properties);
     setType("Any");
     setMinPrice(0);
     setMaxPrice(500000000);
+    setMinBed(1);    
+    setMaxBed(10);
     setPostcode("");
     setDateFrom(null);
     setDateTo(null);
@@ -194,9 +181,60 @@ const SearchPage = () => {
                 <DatePicker
                   selected={dateFrom}
                   onChange={(date) => setDateFrom(date)}
-                  placeholderText="Select Date"
+                  placeholderText="Select Start Date"
+                  dateFormat={"yyyy/MM/dd"}
                   className="date-picker-input"
                   wrapperClassName="date-picker-wrapper"
+                  renderCustomHeader={({
+                    date,
+                    changeYear,
+                    decreaseMonth,
+                    increaseMonth,
+                    prevMonthButtonDisabled,
+                    nextMonthButtonDisabled,
+                  }) => (
+                    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "5px" }}>
+                      <button type="button" onClick={() => changeYear(date.getFullYear() - 1)} className="date-picker-input-buttons">{"<<"}</button>
+                      <button type="button" onClick={decreaseMonth} disabled={prevMonthButtonDisabled} className="date-picker-input-buttons">{"<"}</button>
+                      <span style={{ margin: "0 10px", fontWeight: "bold" }}>
+                        {date.toLocaleString("default", { month: "long" })} {date.getFullYear()}
+                      </span>
+                      <button type="button" onClick={increaseMonth} disabled={nextMonthButtonDisabled} className="date-picker-input-buttons">{">"}</button>
+                      <button type="button" onClick={() => changeYear(date.getFullYear() + 1)} className="date-picker-input-buttons">{">>"}</button>
+                    </div>
+                  )}
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label>Added Before</label>
+              <div style={{ width: "100%" }}>
+                <DatePicker
+                  selected={dateTo}
+                  onChange={(date) => setDateTo(date)}
+                  placeholderText="Select End Date"
+                  dateFormat={"yyyy/MM/dd"}                  
+                  className="date-picker-input"
+                  wrapperClassName="date-picker-wrapper"
+                  renderCustomHeader={({
+                    date,
+                    changeYear,
+                    decreaseMonth,
+                    increaseMonth,
+                    prevMonthButtonDisabled,
+                    nextMonthButtonDisabled,
+                  }) => (
+                    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "5px" }}>
+                      <button type="button" onClick={() => changeYear(date.getFullYear() - 1)} className="date-picker-input-buttons">{"<<"}</button>
+                      <button type="button" onClick={decreaseMonth} disabled={prevMonthButtonDisabled} className="date-picker-input-buttons">{"<"}</button>
+                      <span style={{ margin: "0 10px", fontWeight: "bold" }}>
+                        {date.toLocaleString("default", { month: "long" })} {date.getFullYear()}
+                      </span>
+                      <button type="button" onClick={increaseMonth} disabled={nextMonthButtonDisabled} className="date-picker-input-buttons">{">"}</button>
+                      <button type="button" onClick={() => changeYear(date.getFullYear() + 1)} className="date-picker-input-buttons">{">>"}</button>
+                    </div>
+                  )}
                 />
               </div>
             </div>

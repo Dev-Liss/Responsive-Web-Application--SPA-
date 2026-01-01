@@ -12,32 +12,24 @@ import {
   FaCheck,
 } from "react-icons/fa";
 
-/**
- * PropertyDetails Page
- * Displays full information about a specific property.
- * Uses URL parameters (id) to find the right house.
- */
 const PropertyDetails = () => {
-  // 1. Get the 'id' from the URL (e.g. /property/prop1)
+  // Get ID, properties, and favorites context
   const { id } = useParams();
-
-  // 2. Get global data to find the specific property
   const { properties, addToFavorites, favorites } = useContext(PropertyContext);
-
   const property = properties.find((p) => p.id === id);
 
-  // 3. Create a list of images (Main picture + thumbnails)
+  // Prepare array of image paths for the gallery
   const images = property
     ? [
-        property.picture, // The main image from JSON
+        property.picture,
         ...Array.from({ length: 6 }, (_, i) => `images/${id}/${i + 1}.jpeg`),
       ]
     : [];
 
-  // State for the currently selected large image
+  // State to track which image is currently displayed in the large view
   const [mainImage, setMainImage] = useState(property ? property.picture : "");
 
-  // Safety Check: If someone types a wrong ID in URL
+  // If property not found, show error message
   if (!property) {
     return (
       <div style={{ padding: "20px" }}>
@@ -47,12 +39,12 @@ const PropertyDetails = () => {
     );
   }
 
-  // Check if this property is already in favorites
+  // Check if this property is already in the user's favorites list
   const isSaved = favorites.some((fav) => fav.id === property.id);
 
   return (
     <div style={{ maxWidth: "1000px", margin: "0 auto", padding: "20px" }}>
-      {/* Back Button */}
+      {/* Navigation: Back to Search */}
       <Link
         to="/"
         style={{
@@ -69,35 +61,32 @@ const PropertyDetails = () => {
       <div className="details-grid">
         {/* LEFT COLUMN: Image Gallery */}
         <div>
+          {/* Main Large Image */}
           <img
             src={`${import.meta.env.BASE_URL}${mainImage}`}
-            alt="Main"
+            alt="Main View"
             style={{ width: "100%", borderRadius: "8px", marginBottom: "10px" }}
           />
-          {/* Thumbnail Strip */}
-          <div style={{ display: "flex", gap: "10px" }}>
+
+          {/* Thumbnail Grid (Responsive via CSS classes) */}
+          <div className="thumbnail-grid">
             {images.map((img, index) => (
               <img
                 key={index}
                 src={`${import.meta.env.BASE_URL}${img}`}
                 alt={`Thumbnail ${index}`}
+                // Click handler: Update the main image state
                 onClick={() => setMainImage(img)}
+                // Error handler: Hide thumbnail if file is missing (cleaner UI)
                 onError={(e) => (e.target.style.display = "none")}
-                style={{
-                  width: "80px",
-                  height: "60px",
-                  objectFit: "cover",
-                  cursor: "pointer",
-                  borderRadius: "4px",
-                  border:
-                    mainImage === img ? "3px solid #007bff" : "1px solid #ddd",
-                }}
+                // Apply 'active' class if this is the selected image
+                className={`thumbnail-img ${mainImage === img ? "active" : ""}`}
               />
             ))}
           </div>
         </div>
 
-        {/* RIGHT COLUMN: Key Details & Actions */}
+        {/* RIGHT COLUMN: Property Details & Actions */}
         <div>
           <h1 style={{ marginTop: 0 }}>
             {property.type} in {property.location.split(",")[0]}
@@ -109,6 +98,7 @@ const PropertyDetails = () => {
           <p style={{ fontSize: "1.1em", color: "#555" }}>
             <FaMapMarkerAlt /> {property.location}
           </p>
+
           <div style={{ display: "flex", gap: "20px", margin: "20px 0" }}>
             <span>
               <FaBed /> {property.bedrooms} Bedrooms
@@ -118,10 +108,10 @@ const PropertyDetails = () => {
             </span>
           </div>
 
-          {/* SAVE BUTTON (Changes color if already saved) */}
+          {/* Add to Favorites Button */}
           <button
             onClick={() => !isSaved && addToFavorites(property)}
-            disabled={isSaved}
+            disabled={isSaved} // Disable if already saved
             style={{
               padding: "12px 24px",
               fontSize: "1em",
@@ -149,7 +139,7 @@ const PropertyDetails = () => {
         </div>
       </div>
 
-      {/* BOTTOM SECTION: Tabs (Description, Floor Plan, Map) */}
+      {/* BOTTOM SECTION: Tabs for extra details */}
       <Tabs>
         <TabList>
           <Tab>Description</Tab>
@@ -157,7 +147,7 @@ const PropertyDetails = () => {
           <Tab>Google Map</Tab>
         </TabList>
 
-        {/* Tab 1: Description */}
+        {/* Tab 1: Text Description */}
         <TabPanel>
           <div style={{ padding: "10px 0" }}>
             <h3>Property Description</h3>
@@ -167,11 +157,10 @@ const PropertyDetails = () => {
           </div>
         </TabPanel>
 
-        {/* Tab 2: Specific Floor Plan */}
+        {/* Tab 2: Floor Plan Image */}
         <TabPanel>
           <div style={{ marginTop: "20px", textAlign: "center" }}>
             <img
-              // DYNAMIC PATH: Looks for 'floorplan.jpeg' inside the specific property ID folder
               src={`${import.meta.env.BASE_URL}images/${id}/floorplan.jpeg`}
               alt="Floor Plan"
               style={{
@@ -181,29 +170,32 @@ const PropertyDetails = () => {
                 border: "1px solid #ddd",
                 boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
               }}
-              // Fallback: this hides the broken image icon
               onError={(e) => {
                 e.target.style.display = "none";
                 e.target.nextSibling.style.display = "block";
               }}
             />
-            {/* Fallback Text (Hidden by default) */}
+            {/* Fallback Message */}
             <p style={{ display: "none", color: "red" }}>
-              Floor plan image not found. Please ensure 'public/images/{id}
-              /floorplan.jpeg' exists.
+              Floor plan image not available for this property.
             </p>
           </div>
         </TabPanel>
 
-        {/* Tab 3: Dynamic Map using OpenStreetMap */}
+        {/* Tab 3: Dynamic Google Map */}
         <TabPanel>
           <div style={{ marginTop: "20px" }}>
             <iframe
               title={`Map showing ${property.location}`}
               width="100%"
-              height="450"
-              style={{ border: 0 }}
-
+              height="400"
+              style={{
+                border: 0,
+                borderRadius: "8px",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+              }}
+              loading="lazy"
+              allowFullScreen
               src={`https://www.google.com/maps?q=${encodeURIComponent(
                 property.location
               )}&output=embed`}

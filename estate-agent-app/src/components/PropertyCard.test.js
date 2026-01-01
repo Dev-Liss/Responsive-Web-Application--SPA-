@@ -4,16 +4,12 @@ import { BrowserRouter } from "react-router-dom";
 import PropertyCard from "./PropertyCard";
 
 // --- MOCK 1: UTILS ---
-// Mocks the getBaseUrl function so it doesn't fail outside the Vite environment
 jest.mock("../utils", () => ({
   getBaseUrl: () => "/",
   parsePropertyDate: jest.fn(),
 }));
 
 // --- MOCK 2: REACT-DND (The Fix) ---
-// Jest cannot read the complex 'react-dnd' library.
-// We replace it with simple "fake" functions that do nothing.
-// This allows the test to focus on the UI (Text, Buttons) without crashing.
 jest.mock("react-dnd", () => ({
   useDrag: () => [{ isDragging: false }, jest.fn()],
   DndProvider: ({ children }) => <div>{children}</div>,
@@ -22,7 +18,6 @@ jest.mock("react-dnd", () => ({
 jest.mock("react-dnd-html5-backend", () => ({
   HTML5Backend: {},
 }));
-// -------------------------------
 
 // Mock Data to simulate a real property
 const mockProperty = {
@@ -37,7 +32,6 @@ const mockProperty = {
 
 const renderComponent = () => {
   return render(
-    // We must wrap the component in BrowserRouter because it uses <Link>
     <BrowserRouter>
       <PropertyCard property={mockProperty} />
     </BrowserRouter>

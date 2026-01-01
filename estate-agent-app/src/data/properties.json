@@ -59,9 +59,9 @@
       "picture": "images/prop4/main.jpeg",
       "url": "properties/prop4.html",
       "added": {
-        "month": "March",
+        "month": "May",
         "day": 5,
-        "year": 2023
+        "year": 2025
       }
     },
     {
@@ -77,7 +77,7 @@
       "added": {
         "month": "November",
         "day": 20,
-        "year": 2022
+        "year": 2011
       }
     },
     {
@@ -93,7 +93,7 @@
       "added": {
         "month": "April",
         "day": 15,
-        "year": 2023
+        "year": 2015
       }
     },
     {
@@ -107,9 +107,9 @@
       "picture": "images/prop7/main.jpeg",
       "url": "properties/prop7.html",
       "added": {
-        "month": "December",
-        "day": 1,
-        "year": 2022
+        "month": "June",
+        "day": 5,
+        "year": 2017
       }
     }
   ]

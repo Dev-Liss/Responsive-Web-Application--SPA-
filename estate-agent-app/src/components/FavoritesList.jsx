@@ -18,7 +18,7 @@ const FavoritesList = () => {
 
   /**
    * useDrop Hook (React DnD)
-   * This makes this component able to accept dropped items.
+   * Makes this component able to accept dropped items.
    */
   const [{ isOver }, drop] = useDrop(
     () => ({
@@ -31,7 +31,7 @@ const FavoritesList = () => {
         }
       },
       collect: (monitor) => ({
-        isOver: !!monitor.isOver(), // True if user is hovering a card over this box
+        isOver: !!monitor.isOver(), // True - user is hovering a card over this box
       }),
     }),
     [properties, favorites]
@@ -39,12 +39,11 @@ const FavoritesList = () => {
 
   return (
     <div
-      ref={drop} // Connects the drop logic to this DIV
+      ref={drop} // Connects the drop logic
       style={{
         border: "2px dashed #007bff",
         borderRadius: "8px",
         padding: "15px",
-        // Change background color when user hovers a card over it
         background: isOver ? "#e9ecef" : "#f8f9fa",
         minHeight: "300px",
       }}
