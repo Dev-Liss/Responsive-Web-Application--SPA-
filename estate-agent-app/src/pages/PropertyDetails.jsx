@@ -30,7 +30,7 @@ const PropertyDetails = () => {
   const images = property
     ? [
         property.picture, // The main image from JSON
-        ...Array.from({ length: 6 }, (_, i) => `images/${id}/${i + 1}.jpeg`)
+        ...Array.from({ length: 6 }, (_, i) => `images/${id}/${i + 1}.jpeg`),
       ]
     : [];
 
@@ -82,7 +82,7 @@ const PropertyDetails = () => {
                 src={`${import.meta.env.BASE_URL}${img}`}
                 alt={`Thumbnail ${index}`}
                 onClick={() => setMainImage(img)}
-                onError={(e) => e.target.style.display = 'none'}
+                onError={(e) => (e.target.style.display = "none")}
                 style={{
                   width: "80px",
                   height: "60px",
@@ -157,46 +157,57 @@ const PropertyDetails = () => {
           <Tab>Google Map</Tab>
         </TabList>
 
+        {/* Tab 1: Description */}
         <TabPanel>
-          <h3>Property Description</h3>
-          <p style={{ lineHeight: "1.6", fontSize: "1.1em" }}>
-            {property.description}
-          </p>
-        </TabPanel>
-
-        <TabPanel>
-          <div style={{ marginTop: "20px", textAlign: "center" }}>
-            {/* Generic Floor Plan Image */}
-            <img
-              src={`${import.meta.env.BASE_URL}images/floorplan.jpg`}
-              alt="Floor Plan"
-              style={{
-                maxWidth: "100%",
-                height: "auto",
-                borderRadius: "8px",
-                border: "1px solid #ddd",
-              }}
-              onError={(e) => (e.target.style.display = "none")} // Hide if missing
-            />
-            <p style={{ color: "#888", fontStyle: "italic" }}>
-              Illustrative floor plan
+          <div style={{ padding: "10px 0" }}>
+            <h3>Property Description</h3>
+            <p style={{ lineHeight: "1.6", fontSize: "1.1em" }}>
+              {property.description}
             </p>
           </div>
         </TabPanel>
 
+        {/* Tab 2: Specific Floor Plan */}
+        <TabPanel>
+          <div style={{ marginTop: "20px", textAlign: "center" }}>
+            <img
+              // DYNAMIC PATH: Looks for 'floorplan.jpeg' inside the specific property ID folder
+              src={`${import.meta.env.BASE_URL}images/${id}/floorplan.jpeg`}
+              alt="Floor Plan"
+              style={{
+                maxWidth: "100%",
+                maxHeight: "500px",
+                borderRadius: "8px",
+                border: "1px solid #ddd",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+              }}
+              // Fallback: this hides the broken image icon
+              onError={(e) => {
+                e.target.style.display = "none";
+                e.target.nextSibling.style.display = "block";
+              }}
+            />
+            {/* Fallback Text (Hidden by default) */}
+            <p style={{ display: "none", color: "red" }}>
+              Floor plan image not found. Please ensure 'public/images/{id}
+              /floorplan.jpeg' exists.
+            </p>
+          </div>
+        </TabPanel>
+
+        {/* Tab 3: Dynamic Map using OpenStreetMap */}
         <TabPanel>
           <div style={{ marginTop: "20px" }}>
-            {/* Dynamic Google Map Embed based on Location */}
             <iframe
+              title={`Map showing ${property.location}`}
               width="100%"
-              height="350"
-              style={{ border: 0, borderRadius: "8px" }}
-              loading="lazy"
-              allowFullScreen
-              src={`https://maps.google.com/maps?q=${encodeURIComponent(
+              height="450"
+              style={{ border: 0 }}
+
+              src={`https://www.google.com/maps?q=${encodeURIComponent(
                 property.location
-              )}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
-            ></iframe>
+              )}&output=embed`}
+            />
           </div>
         </TabPanel>
       </Tabs>
